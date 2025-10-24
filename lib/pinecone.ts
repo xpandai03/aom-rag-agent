@@ -4,7 +4,7 @@
  * Handles all Pinecone operations: index creation, upserting vectors, querying
  */
 
-import { Pinecone, Index, RecordMetadata } from "@pinecone-database/pinecone";
+import { Pinecone, Index } from "@pinecone-database/pinecone";
 import { EMBEDDING_DIMENSIONS } from "./embeddings";
 
 // Singleton Pinecone client
@@ -38,13 +38,13 @@ export function getIndexName(): string {
 /**
  * Chunk metadata stored with each vector
  */
-export interface ChunkMetadata extends RecordMetadata {
+export interface ChunkMetadata {
   title: string;          // Article title
   url: string;            // Article URL
   content: string;        // Chunk text content
   chunkIndex: number;     // Position in original article
   articleId: string;      // Original article ID
-  totalChunks?: number;   // Total chunks in article
+  [key: string]: string | number;  // Allow any additional metadata
 }
 
 /**
