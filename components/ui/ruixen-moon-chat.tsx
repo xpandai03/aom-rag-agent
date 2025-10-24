@@ -312,7 +312,7 @@ export default function RuixenMoonChat() {
         </>
       ) : (
         // Chat View - Conversation Interface
-        <div className="flex flex-col h-full max-w-4xl mx-auto w-full">
+        <div className="flex flex-col h-screen max-w-4xl mx-auto w-full">
           {/* Header */}
           <div className="bg-black/60 backdrop-blur-md border-b border-neutral-700 px-6 py-4">
             <h1 className="text-xl font-semibold text-white">
@@ -324,7 +324,7 @@ export default function RuixenMoonChat() {
           </div>
 
           {/* Messages Container */}
-          <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6">
+          <div className="flex-1 overflow-y-auto px-6 py-8 pb-4 space-y-6">
             {messages.map((msg, index) => (
               <div
                 key={index}
