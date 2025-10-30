@@ -51,6 +51,20 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // AoM Design System Colors
+        cream: "#FAF7F2",
+        "accent-red": "#B13625",
+        "accent-red-hover": "#8E2A1D",
+        "dark-red": "#7C2B12",
+        "muted-beige": "#EAE0D5",
+        "brown-text": "#4E2E1A",
+        "soft-white": "#FEFCF7",
+        "border-beige": "#D4C4B0",
+        "light-beige": "#F5F0E8",
+      },
+      fontFamily: {
+        display: ["Playfair Display", "serif"],
+        body: ["Lato", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -201,25 +201,25 @@ export default function RuixenMoonChat() {
   return (
     <div
       className={cn(
-        "relative w-full bg-cover bg-center flex flex-col",
+        "relative w-full flex flex-col",
         showChatView ? "h-full min-h-screen" : "h-screen"
       )}
-      style={{
-        backgroundImage:
-          "url('https://pub-940ccf6255b54fa799a9b01050e6c227.r2.dev/ruixen_moon_2.png')",
-        backgroundAttachment: "fixed",
-      }}
     >
       {!showChatView ? (
         // Hero View - Initial Landing
         <>
           {/* Centered AI Title */}
-          <div className="flex-1 w-full flex flex-col items-center justify-center">
-            <div className="text-center">
-              <h1 className="text-4xl font-semibold text-white drop-shadow-sm">
-                Private Knowledge GPT
-              </h1>
-              <p className="mt-2 text-neutral-200">
+          <div className="flex-1 w-full flex flex-col items-center justify-center px-4">
+            <div className="text-center max-w-2xl">
+              <div className="flex justify-center mb-4">
+                <img
+                  src="/AOM-logo.png"
+                  alt="Art of Manliness"
+                  className="h-32 w-auto md:h-40 object-contain"
+                />
+              </div>
+              <div className="w-24 h-0.5 bg-accent-red mx-auto mb-4"></div>
+              <p className="text-lg text-brown-text font-body">
                 Search through Brett McKay's archive — just start typing below.
               </p>
             </div>
@@ -228,7 +228,7 @@ export default function RuixenMoonChat() {
           {/* Input Box Section */}
           <div className="w-full max-w-3xl mx-auto mb-[20vh] px-4">
             <form onSubmit={handleSubmit}>
-              <div className="relative bg-black/60 backdrop-blur-md rounded-xl border border-neutral-700">
+              <div className="relative bg-soft-white rounded-xl border border-border-beige editorial-shadow">
                 <Textarea
                   ref={textareaRef}
                   value={message}
@@ -240,20 +240,20 @@ export default function RuixenMoonChat() {
                   placeholder="Type your request..."
                   className={cn(
                     "w-full px-4 py-3 resize-none border-none",
-                    "bg-transparent text-white text-sm",
-                    "focus-visible:ring-0 focus-visible:ring-offset-0",
-                    "placeholder:text-neutral-400 min-h-[48px]"
+                    "bg-transparent text-brown-text text-sm font-body",
+                    "focus-visible:ring-1 focus-visible:ring-accent-red focus-visible:ring-offset-0",
+                    "placeholder:text-brown-text/50 min-h-[48px]"
                   )}
                   style={{ overflow: "hidden" }}
                 />
 
                 {/* Footer Buttons */}
-                <div className="flex items-center justify-between p-3">
+                <div className="flex items-center justify-between p-3 border-t border-accent-red">
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:bg-neutral-700"
+                    className="text-brown-text hover:bg-light-beige"
                   >
                     <Paperclip className="w-4 h-4" />
                   </Button>
@@ -261,15 +261,11 @@ export default function RuixenMoonChat() {
                   <div className="flex items-center gap-2">
                     <Button
                       type="submit"
+                      variant="ghost"
                       disabled={!message.trim() || isLoading}
-                      className={cn(
-                        "flex items-center gap-1 px-3 py-2 rounded-lg transition-colors",
-                        message.trim() && !isLoading
-                          ? "bg-white text-black hover:bg-neutral-200"
-                          : "bg-neutral-700 text-neutral-400 cursor-not-allowed"
-                      )}
+                      className="aom-send-button"
                     >
-                      <ArrowUpIcon className="w-4 h-4" />
+                      <ArrowUpIcon className="w-4 h-4 text-white" />
                       <span className="sr-only">Send</span>
                     </Button>
                   </div>
@@ -314,11 +310,11 @@ export default function RuixenMoonChat() {
         // Chat View - Conversation Interface
         <div className="flex flex-col h-screen max-w-4xl mx-auto w-full">
           {/* Header */}
-          <div className="bg-black/60 backdrop-blur-md border-b border-neutral-700 px-6 py-4">
-            <h1 className="text-xl font-semibold text-white">
+          <div className="bg-cream border-b-2 border-border-beige px-6 py-5 editorial-shadow">
+            <h1 className="text-2xl font-bold font-display text-accent-red">
               Private Knowledge GPT
             </h1>
-            <p className="text-sm text-neutral-300">
+            <p className="text-sm text-brown-text font-body mt-1">
               Searching Brett McKay's archive
             </p>
           </div>
@@ -329,27 +325,37 @@ export default function RuixenMoonChat() {
               <div
                 key={index}
                 className={cn(
-                  "flex gap-4",
+                  "flex gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300",
                   msg.role === "user" ? "justify-end" : "justify-start"
                 )}
               >
                 {msg.role === "assistant" && (
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-                    <CircleUserRound className="w-5 h-5 text-white" />
+                  <div className="w-8 h-8 rounded-full bg-accent-red/10 flex items-center justify-center flex-shrink-0">
+                    <CircleUserRound className="w-5 h-5 text-accent-red" />
                   </div>
                 )}
                 <div
                   className={cn(
-                    "max-w-[70%] rounded-2xl px-4 py-3",
+                    "max-w-[70%] rounded-xl px-5 py-4 editorial-shadow",
                     msg.role === "user"
-                      ? "bg-white text-black"
-                      : "bg-black/60 backdrop-blur-md text-white border border-neutral-700"
+                      ? "bg-soft-white border border-border-beige"
+                      : "bg-muted-beige border-l-4 border-accent-red"
                   )}
                 >
+                  {msg.role === "assistant" && (
+                    <div className="font-display font-semibold text-accent-red mb-2 text-sm">
+                      Brett McKay Archive AI
+                    </div>
+                  )}
                   <div
-                    className="text-sm leading-relaxed whitespace-pre-wrap prose prose-invert max-w-none"
+                    className={cn(
+                      "text-sm leading-relaxed whitespace-pre-wrap font-body",
+                      msg.role === "user" ? "text-brown-text" : "text-foreground"
+                    )}
                     dangerouslySetInnerHTML={{
-                      __html: msg.content.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                      __html: msg.content
+                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-accent-red hover:text-dark-red underline">$1</a>')
+                        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
                         .replace(/\*(.*?)\*/g, "<em>$1</em>")
                         .replace(/\n/g, "<br/>"),
                     }}
@@ -357,8 +363,8 @@ export default function RuixenMoonChat() {
 
                   {/* Citations */}
                   {msg.role === "assistant" && msg.citations && msg.citations.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-neutral-600">
-                      <p className="text-xs text-neutral-400 font-semibold mb-2">Sources:</p>
+                    <div className="mt-4 pt-4 border-t border-border-beige">
+                      <p className="text-xs text-brown-text font-semibold mb-2 font-body uppercase tracking-wide">Sources:</p>
                       <div className="space-y-2">
                         {msg.citations.map((citation, idx) => (
                           <a
@@ -366,11 +372,11 @@ export default function RuixenMoonChat() {
                             href={citation.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block text-xs text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-1"
+                            className="block text-xs text-accent-red hover:text-dark-red hover:underline flex items-center gap-1 font-body"
                           >
                             <ExternalLink className="w-3 h-3" />
                             <span>{citation.title}</span>
-                            <span className="text-neutral-500">
+                            <span className="text-brown-text/60">
                               ({(citation.relevance * 100).toFixed(0)}% match)
                             </span>
                           </a>
@@ -380,8 +386,8 @@ export default function RuixenMoonChat() {
                   )}
                 </div>
                 {msg.role === "user" && (
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-                    <CircleUserRound className="w-5 h-5 text-black" />
+                  <div className="w-8 h-8 rounded-full bg-brown-text/10 flex items-center justify-center flex-shrink-0">
+                    <CircleUserRound className="w-5 h-5 text-brown-text" />
                   </div>
                 )}
               </div>
@@ -389,15 +395,20 @@ export default function RuixenMoonChat() {
 
             {/* Streaming message */}
             {isLoading && streamingContent && (
-              <div className="flex gap-4 justify-start">
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <CircleUserRound className="w-5 h-5 text-white" />
+              <div className="flex gap-4 justify-start animate-in fade-in duration-300">
+                <div className="w-8 h-8 rounded-full bg-accent-red/10 flex items-center justify-center flex-shrink-0">
+                  <CircleUserRound className="w-5 h-5 text-accent-red" />
                 </div>
-                <div className="bg-black/60 backdrop-blur-md text-white border border-neutral-700 rounded-2xl px-4 py-3 max-w-[70%]">
+                <div className="bg-muted-beige border-l-4 border-accent-red rounded-xl px-5 py-4 max-w-[70%] editorial-shadow">
+                  <div className="font-display font-semibold text-accent-red mb-2 text-sm">
+                    Brett McKay Archive AI
+                  </div>
                   <div
-                    className="text-sm leading-relaxed whitespace-pre-wrap prose prose-invert max-w-none"
+                    className="text-sm leading-relaxed whitespace-pre-wrap font-body text-foreground"
                     dangerouslySetInnerHTML={{
-                      __html: streamingContent.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                      __html: streamingContent
+                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-accent-red hover:text-dark-red underline">$1</a>')
+                        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
                         .replace(/\*(.*?)\*/g, "<em>$1</em>")
                         .replace(/\n/g, "<br/>"),
                     }}
@@ -408,12 +419,12 @@ export default function RuixenMoonChat() {
 
             {/* Loading indicator */}
             {isLoading && !streamingContent && (
-              <div className="flex gap-4 justify-start">
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <CircleUserRound className="w-5 h-5 text-white" />
+              <div className="flex gap-4 justify-start animate-in fade-in duration-300">
+                <div className="w-8 h-8 rounded-full bg-accent-red/10 flex items-center justify-center flex-shrink-0">
+                  <CircleUserRound className="w-5 h-5 text-accent-red" />
                 </div>
-                <div className="bg-black/60 backdrop-blur-md text-white border border-neutral-700 rounded-2xl px-4 py-3">
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                <div className="bg-muted-beige border-l-4 border-accent-red rounded-xl px-5 py-4 editorial-shadow">
+                  <Loader2 className="w-5 h-5 animate-spin text-accent-red" />
                 </div>
               </div>
             )}
@@ -422,9 +433,9 @@ export default function RuixenMoonChat() {
           </div>
 
           {/* Input Box at Bottom */}
-          <div className="bg-black/60 backdrop-blur-md border-t border-neutral-700 px-6 py-4">
+          <div className="bg-cream border-t-2 border-border-beige px-6 py-4">
             <form onSubmit={handleSubmit}>
-              <div className="relative bg-black/60 backdrop-blur-md rounded-xl border border-neutral-700">
+              <div className="relative bg-soft-white rounded-xl border border-border-beige editorial-shadow">
                 <Textarea
                   ref={textareaRef}
                   value={message}
@@ -436,21 +447,21 @@ export default function RuixenMoonChat() {
                   placeholder="Type your follow-up question..."
                   className={cn(
                     "w-full px-4 py-3 resize-none border-none",
-                    "bg-transparent text-white text-sm",
-                    "focus-visible:ring-0 focus-visible:ring-offset-0",
-                    "placeholder:text-neutral-400 min-h-[48px]"
+                    "bg-transparent text-brown-text text-sm font-body",
+                    "focus-visible:ring-1 focus-visible:ring-accent-red focus-visible:ring-offset-0",
+                    "placeholder:text-brown-text/50 min-h-[48px]"
                   )}
                   style={{ overflow: "hidden" }}
                   disabled={isLoading}
                 />
 
                 {/* Footer Buttons */}
-                <div className="flex items-center justify-between p-3">
+                <div className="flex items-center justify-between p-3 border-t border-accent-red">
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:bg-neutral-700"
+                    className="text-brown-text hover:bg-light-beige"
                     disabled={isLoading}
                   >
                     <Paperclip className="w-4 h-4" />
@@ -459,18 +470,14 @@ export default function RuixenMoonChat() {
                   <div className="flex items-center gap-2">
                     <Button
                       type="submit"
+                      variant="ghost"
                       disabled={!message.trim() || isLoading}
-                      className={cn(
-                        "flex items-center gap-1 px-3 py-2 rounded-lg transition-colors",
-                        message.trim() && !isLoading
-                          ? "bg-white text-black hover:bg-neutral-200"
-                          : "bg-neutral-700 text-neutral-400 cursor-not-allowed"
-                      )}
+                      className="aom-send-button"
                     >
                       {isLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Loader2 className="w-4 h-4 animate-spin text-white" />
                       ) : (
-                        <ArrowUpIcon className="w-4 h-4" />
+                        <ArrowUpIcon className="w-4 h-4 text-white" />
                       )}
                       <span className="sr-only">Send</span>
                     </Button>
@@ -497,10 +504,10 @@ function QuickAction({ icon, label, onClick }: QuickActionProps) {
       type="button"
       variant="outline"
       onClick={onClick}
-      className="flex items-center gap-2 rounded-full border-neutral-700 bg-black/50 text-neutral-300 hover:text-white hover:bg-neutral-700"
+      className="flex items-center gap-2 rounded-full border-border-beige bg-soft-white text-brown-text hover:bg-light-beige hover:border-accent-red transition-all font-body"
     >
-      {icon}
-      <span className="text-xs">{label}</span>
+      <span className="text-accent-red">{icon}</span>
+      <span className="text-xs font-semibold">{label}</span>
     </Button>
   );
 }
