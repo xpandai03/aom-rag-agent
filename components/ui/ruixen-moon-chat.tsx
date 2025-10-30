@@ -17,7 +17,9 @@ import {
   Rocket,
   Loader2,
   ExternalLink,
+  Plus,
 } from "lucide-react";
+import UploadModal from "@/components/ui/upload-modal";
 
 interface AutoResizeProps {
   minHeight: number;
@@ -72,6 +74,7 @@ export default function RuixenMoonChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [streamingContent, setStreamingContent] = useState("");
+  const [showUploadModal, setShowUploadModal] = useState(false);
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight: 48,
     maxHeight: 150,
@@ -254,6 +257,7 @@ export default function RuixenMoonChat() {
                     variant="ghost"
                     size="icon"
                     className="text-brown-text hover:bg-light-beige"
+                    onClick={() => setShowUploadModal(true)}
                   >
                     <Paperclip className="w-4 h-4" />
                   </Button>
@@ -311,12 +315,24 @@ export default function RuixenMoonChat() {
         <div className="flex flex-col h-screen max-w-4xl mx-auto w-full">
           {/* Header */}
           <div className="bg-cream border-b-2 border-border-beige px-6 py-5 editorial-shadow">
-            <div className="flex justify-center">
+            <div className="flex items-center justify-between">
+              <div className="w-10"></div> {/* Spacer for balance */}
               <img
                 src="/AOM-logo.png"
                 alt="Art of Manliness"
                 className="h-24 w-auto md:h-28 object-contain"
               />
+              {/* Upload Button */}
+              <button
+                onClick={() => setShowUploadModal(true)}
+                className="flex items-center gap-2 px-3 py-2 bg-accent-red text-soft-white
+                           rounded-md hover:bg-dark-red transition-colors editorial-shadow
+                           text-sm font-medium"
+                title="Upload new content (admin only)"
+              >
+                <Plus className="w-4 h-4" />
+                <span className="hidden sm:inline">Upload</span>
+              </button>
             </div>
           </div>
 
@@ -464,6 +480,7 @@ export default function RuixenMoonChat() {
                     size="icon"
                     className="text-brown-text hover:bg-light-beige"
                     disabled={isLoading}
+                    onClick={() => setShowUploadModal(true)}
                   >
                     <Paperclip className="w-4 h-4" />
                   </Button>
@@ -489,6 +506,12 @@ export default function RuixenMoonChat() {
           </div>
         </div>
       )}
+
+      {/* Upload Modal */}
+      <UploadModal
+        isOpen={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+      />
     </div>
   );
 }
