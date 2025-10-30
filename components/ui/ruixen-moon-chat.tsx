@@ -311,12 +311,13 @@ export default function RuixenMoonChat() {
         <div className="flex flex-col h-screen max-w-4xl mx-auto w-full">
           {/* Header */}
           <div className="bg-cream border-b-2 border-border-beige px-6 py-5 editorial-shadow">
-            <h1 className="text-2xl font-bold font-display text-accent-red">
-              Private Knowledge GPT
-            </h1>
-            <p className="text-sm text-brown-text font-body mt-1">
-              Searching Brett McKay's archive
-            </p>
+            <div className="flex justify-center">
+              <img
+                src="/AOM-logo.png"
+                alt="Art of Manliness"
+                className="h-24 w-auto md:h-28 object-contain"
+              />
+            </div>
           </div>
 
           {/* Messages Container */}
