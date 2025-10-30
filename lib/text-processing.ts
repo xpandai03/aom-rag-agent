@@ -5,6 +5,41 @@
  * for the RAG data ingestion pipeline.
  */
 
+import fs from "fs";
+import path from "path";
+import os from "os";
+
+/**
+ * Extract text content from PDF buffer
+ *
+ * @param buffer - PDF file buffer
+ * @returns Extracted text content
+ */
+export async function parsePDF(buffer: Buffer): Promise<string> {
+  let tempFilePath: string | null = null;
+
+  try {
+    // Write buffer to temporary file (workaround for pdf-parse)
+    const tempDir = os.tmpdir();
+    tempFilePath = path.join(tempDir, `pdf-${Date.now()}-${Math.random().toString(36).substring(7)}.pdf`);
+    fs.writeFileSync(tempFilePath, buffer);
+
+    // Use dynamic import for pdf-parse v1.1.1
+    const pdfParse = (await import("pdf-parse")).default;
+    const dataBuffer = fs.readFileSync(tempFilePath);
+    const data = await pdfParse(dataBuffer);
+
+    return data.text;
+  } catch (error) {
+    throw new Error(`Failed to parse PDF: ${(error as Error).message}`);
+  } finally {
+    // Clean up temp file
+    if (tempFilePath && fs.existsSync(tempFilePath)) {
+      fs.unlinkSync(tempFilePath);
+    }
+  }
+}
+
 /**
  * Clean HTML content and extract plain text
  * Removes all HTML tags, scripts, styles, and normalizes whitespace
