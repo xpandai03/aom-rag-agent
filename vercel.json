@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "chat-ui/app/api/ingest/upload/route.ts": {
+      "maxDuration": 300
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Papa from "papaparse";
-import { prepareArticle, parsePDF } from "@/lib/text-processing";
+import { prepareArticle, parsePDF, estimateTokens } from "@/lib/text-processing";
 import { batchGenerateEmbeddings, estimateEmbeddingCost } from "@/lib/embeddings";
 import { upsertVectors, buildVectorId, VectorRecord, getIndexStats } from "@/lib/pinecone";
 
@@ -54,6 +54,26 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`✅ Parsed ${articles.length} articles from ${fileName}`);
+
+    // Validate total token count before processing
+    const totalContent = articles.map(a => a.content).join('\n');
+    const estimatedTokens = estimateTokens(totalContent);
+
+    if (estimatedTokens > 200000) {
+      console.error(`❌ Document too large: ${estimatedTokens.toLocaleString()} tokens (max: 200,000)`);
+      return NextResponse.json(
+        {
+          error: `Document too large (${estimatedTokens.toLocaleString()} tokens). Maximum: 200,000 tokens.`,
+          stats: {
+            estimatedTokens,
+            maxTokens: 200000,
+          }
+        },
+        { status: 413 }
+      );
+    }
+
+    console.log(`📊 Estimated tokens: ${estimatedTokens.toLocaleString()}`);
 
     // Process articles through the pipeline
     const result = await processArticles(articles);
