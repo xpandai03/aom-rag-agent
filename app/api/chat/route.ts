@@ -14,7 +14,7 @@ import { indexExists } from "@/lib/pinecone";
  * Request validation schema
  */
 const ChatRequestSchema = z.object({
-  message: z.string().min(1, "Message cannot be empty").max(50000, "Message too long (max 50,000 characters)"),
+  message: z.string().min(1, "Message cannot be empty").max(100000, "Message too long (max 100,000 characters)"),
   conversationHistory: z
     .array(
       z.object({
