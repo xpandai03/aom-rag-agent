@@ -9,6 +9,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { queryKnowledgeBaseStream } from "@/lib/rag";
 import { indexExists } from "@/lib/pinecone";
+import { summarizeChatMessage } from "@/lib/summarization";
+import { estimateTokens } from "@/lib/text-processing";
 
 /**
  * Request validation schema
@@ -86,6 +88,32 @@ export async function POST(request: NextRequest) {
 
     const { message, conversationHistory } = validation.data;
 
+    // Summarize long messages before embedding generation
+    // Embedding model (text-embedding-3-large) has 8192 token limit
+    let processedMessage = message;
+    const estimatedTokens = estimateTokens(message);
+
+    if (estimatedTokens > 6000) {
+      console.log(`⚠️  Long message detected: ${estimatedTokens.toLocaleString()} tokens (${message.length.toLocaleString()} chars)`);
+      console.log("📝 Summarizing to fit embedding model limits...");
+
+      try {
+        const { summary, originalTokens, summaryTokens } = await summarizeChatMessage(message);
+        processedMessage = summary;
+
+        console.log(`✅ Summarization complete:`);
+        console.log(`   Original: ${originalTokens.toLocaleString()} tokens`);
+        console.log(`   Summary: ${summaryTokens.toLocaleString()} tokens`);
+        console.log(`   Reduction: ${Math.round((1 - summaryTokens / originalTokens) * 100)}%`);
+      } catch (error) {
+        console.error("❌ Summarization failed:", error);
+        // Fallback: truncate to safe size
+        const maxChars = 6000 * 3.5; // ~6k tokens
+        processedMessage = message.slice(0, maxChars) + "...";
+        console.log(`⚠️  Using truncation fallback (${maxChars} chars)`);
+      }
+    }
+
     // Check if Pinecone index exists
     const exists = await indexExists();
     if (!exists) {
@@ -100,9 +128,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Query the RAG pipeline with streaming
-    console.log(`Processing query: "${message.substring(0, 50)}..."`);
+    console.log(`Processing query: "${processedMessage.substring(0, 50)}..."`);
 
-    const { stream, citations } = await queryKnowledgeBaseStream(message, {
+    const { stream, citations } = await queryKnowledgeBaseStream(processedMessage, {
       topK: 5,
       temperature: 0.3,
       maxTokens: 800,
